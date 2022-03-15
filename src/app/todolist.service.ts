@@ -18,7 +18,7 @@ let idItem = 0;
   providedIn: 'root'
 })
 export class TodolistService {
-  private subj = new BehaviorSubject<TodoList>({label: 'L3 MIAGE', items: [] });
+  public subj = new BehaviorSubject<TodoList>({label: 'To Do List', items: [] });
   readonly observable = this.subj.asObservable();
 
   constructor() {
@@ -32,6 +32,20 @@ export class TodolistService {
         ...L.items,
         ...labels.filter( l => l !== '').map(
             label => ({label, isDone: false, id: idItem++})
+          )
+      ]
+    } );
+    return this;
+  }
+
+  createDone(...labels: readonly string[]): this {
+    const L: TodoList = this.subj.value;
+    this.subj.next( {
+      ...L,
+      items: [
+        ...L.items,
+        ...labels.filter( l => l !== '').map(
+            label => ({label, isDone: true, id: idItem++})
           )
       ]
     } );
@@ -59,5 +73,15 @@ export class TodolistService {
     }
     return this;
   }
+
+
+  // done(item: TodoItem){
+  //     const L = this.subj.value;
+  //     this.subj.next( {
+  //       ...L,
+  //       items: L.items.map( i => this.subj.value.items.indexOf(item) >= 0 ? {item, ...data} : item )
+  //     } );
+  //   return this;
+  // }
 
 }
