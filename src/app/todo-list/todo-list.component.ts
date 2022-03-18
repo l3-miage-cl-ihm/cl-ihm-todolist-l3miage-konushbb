@@ -18,18 +18,42 @@ export class TodoListComponent implements OnInit {
     this.todoListObs = tds.observable;
   }
 
+  ngOnInit(): void {
+
+    var t:string[] = JSON.parse(localStorage.getItem('todo') || '[]');
+    t.forEach( e =>
+      {
+        this.create(e)
+      })
+  }
+
     create(...labels : readonly string[]){
     this.tds.create(...labels)
-    this.liste.push(...labels);
+    this.liste.push(...labels)
+    console.log(...labels)
+    console.log(this.newTask)
+    console.log(this.liste)
+    localStorage.setItem('todo', JSON.stringify(this.liste));
+  }
+  
+    delete(...items : readonly TodoItem[]){
+    this.tds.delete(...items);
+    let L: string[] = [];
+    let i = 0;
+    this.tds.subj.forEach(e => {
+      e.items.forEach(element => {
+        L[i] = element.label;
+        i ++;
+      });
+    })
+    this.liste = L;
     localStorage.setItem("todo", JSON.stringify(this.liste));
   }
 
-  ngOnInit(): void {
 
-    this.liste = JSON.parse(localStorage.getItem('todo') || '[]');
-      this.liste.forEach(e => {
-        this.tds.create(e);
-      })
-  }
+
+ 
+
+
 
 }

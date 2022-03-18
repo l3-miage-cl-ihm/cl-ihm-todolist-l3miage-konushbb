@@ -20,8 +20,8 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(): void {
-      this.liste = JSON.parse(localStorage.getItem('todo') || '[]');
-      this.liste.forEach( e =>
+      var temp:string[] = JSON.parse(localStorage.getItem('todo') || '[]');
+      temp.forEach( e =>
         {
           this.create(e)
         })

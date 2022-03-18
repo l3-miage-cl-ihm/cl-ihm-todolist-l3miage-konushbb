@@ -1,12 +1,12 @@
 <section class="todoapp">
     <header class="header">
       <h1></h1>
-      <form>
-        <input  name        = "newTodoInput"
+      <form (submit)= "create(newTask); newTask=''">
+        <input  
+                name        = "newTodoInput"
                 class       = "new-todo"
                 placeholder = "Que faire?"
                 autofocus #lab
-                (keyup.enter)= "create(newTask)"
                 [(ngModel)] = "newTask"/>
       </form>
     </header>
@@ -18,7 +18,8 @@
       <label for="toggleAll">Mark all as complete</label>
       <ul class="todo-list">
         <li *ngFor="let item of tdl.items; index as i">
-          <app-todo-item [data] = "item"></app-todo-item>
+          <app-todo-item [data] = "item"
+                          (remove) = "delete(item)"></app-todo-item>
         </li>
       </ul>
     </section>

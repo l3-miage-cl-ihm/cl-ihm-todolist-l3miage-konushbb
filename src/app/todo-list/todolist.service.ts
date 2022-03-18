@@ -24,7 +24,7 @@ export class TodolistService {
   constructor() {
   }
 
-  create(...labels: readonly string[]): this {
+  create(...labels: readonly string[]): string | undefined {
     const L: TodoList = this.subj.value;
     this.subj.next( {
       ...L,
@@ -35,7 +35,9 @@ export class TodolistService {
           )
       ]
     } );
-    return this;
+    var e = this.subj.value.items.concat()
+    const essai = e.pop()
+    return essai?.label;
   }
 
   createDone(...labels: readonly string[]): this {

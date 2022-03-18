@@ -32,4 +32,8 @@ set editing(e: boolean) {
   ngOnInit(): void {
   }
 
+  destroy(item: TodoItem){
+    this.remove.emit(item)
+  }
+
 }
