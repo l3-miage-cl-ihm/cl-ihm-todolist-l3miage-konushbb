@@ -5,16 +5,21 @@
         <input  name        = "newTodoInput"
                 class       = "new-todo"
                 placeholder = "Que faire?"
-                autofocus #lab/>
+                autofocus #lab
+                (keyup.enter)= "create(newTask)"
+                [(ngModel)] = "newTask"/>
       </form>
     </header>
-    <section class="main">
+    <section *ngIf="todoListObs | async as tdl" class="main" >
       <input  class="toggle-all"
               type="checkbox"
               name="toggleAll"
       />
       <label for="toggleAll">Mark all as complete</label>
       <ul class="todo-list">
+        <li *ngFor="let item of tdl.items; index as i">
+          <app-todo-item [data] = "item"></app-todo-item>
+        </li>
       </ul>
     </section>
     <footer class="footer">
