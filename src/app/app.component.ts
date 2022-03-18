@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'RxJs';
-import { TodoItem, TodoList, TodolistService } from './todolist.service';
 import { FormsModule } from '@angular/forms';
 import { History, HistoryService } from './history.service';
 
