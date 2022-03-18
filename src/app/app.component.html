@@ -1,4 +1,4 @@
-<div class="module">
+<!-- <div class="module">
     <div class="title">
       <h1>ToDo List</h1>
     </div>
@@ -6,11 +6,6 @@
   <div class="container">
     <div *ngIf="todoListObs | async as td">
           <input type= "text" [(ngModel)] = "newTask" placeholder="Add new task.." (keyup.enter)= "create(newTask)"/>
-          <!-- (keyup.enter)= "create(e, newTask) -->
-          <!-- <button (click) = "create(i, newTask)"> Add Task</button> -->
-
-          <!-- <button (click) = "create(newTask)"> Add Task</button> -->
-    <!-- </form> -->
   </div>
   </div>
   
@@ -27,5 +22,30 @@
       </li>
     </ul>
   </section>
+  </div> -->
+
+  <div class="module">
+    <div class="title">
+      <h1>ToDo List</h1>
+    </div>
+
+  
+  <!-- <div class="container">
+    <div *ngIf="todoList| async as td">
+          <input type= "text" [(ngModel)] = "newTask" placeholder="Add new task.." (keyup.enter)= "create(newTask)"/>
   </div>
+  </div>
+  
+  <hr class="separator">
+  
+  <section *ngIf="todoList | async as tdl">
+    <h1 class="title"> Titre :</h1>
+    <ul class="taskList">
+      <li *ngFor="let item of tdl.history; index as i">
+        {{ item }}
+        <button (click) = "delete(item)"> Remove task </button>
+      </li>
+    </ul>
+  </section>
+  </div> -->
 
