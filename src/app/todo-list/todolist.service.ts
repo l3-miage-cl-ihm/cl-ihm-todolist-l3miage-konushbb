@@ -3,23 +3,30 @@ import { BehaviorSubject } from 'rxjs';
 
 export interface TodoItem {
   readonly label: string;
-  readonly isDone: boolean;
+  isDone: boolean;
   readonly id: number;
 }
 
 export interface TodoList {
   readonly label: string;
   readonly items: readonly TodoItem[];
+  done : TodoItem[]
 }
-
+export interface FilterList{
+  items: TodoItem[];
+}
 let idItem = 0;
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodolistService {
-  public subj = new BehaviorSubject<TodoList>({label: 'To Do List', items: [] });
+  public subj = new BehaviorSubject<TodoList>({label: 'To Do List', items: [], done: []});
   readonly observable = this.subj.asObservable();
+
+  a: TodoItem[] = this.subj.value.items.filter(item => !item.isDone)
+  aSubj = new BehaviorSubject<FilterList>({items : this.a})
+  aObservable = this.aSubj.asObservable()
 
   constructor() {
   }
@@ -75,15 +82,4 @@ export class TodolistService {
     }
     return this;
   }
-
-
-  // done(item: TodoItem){
-  //     const L = this.subj.value;
-  //     this.subj.next( {
-  //       ...L,
-  //       items: L.items.map( i => this.subj.value.items.indexOf(item) >= 0 ? {item, ...data} : item )
-  //     } );
-  //   return this;
-  // }
-
 }

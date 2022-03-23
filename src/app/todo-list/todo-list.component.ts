@@ -1,21 +1,26 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { TodoItem, TodoList, TodolistService } from './todolist.service';
-import { Observable } from 'RxJs';
+import { FilterList, TodoItem, TodoList, TodolistService } from './todolist.service';
+import { Observable, BehaviorSubject } from 'RxJs';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-todo-list',
   templateUrl: './todo-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class TodoListComponent implements OnInit {
 
   liste: string[] = []
   newTask = ""
 
   readonly todoListObs : Observable<TodoList>;
+  
+  activeList : Observable<FilterList>;
 
   constructor(public tds : TodolistService){
     this.todoListObs = tds.observable;
+    this.activeList = tds.aObservable
   }
 
   ngOnInit(): void {
@@ -24,13 +29,14 @@ export class TodoListComponent implements OnInit {
     t.forEach( e =>
       {
         this.create(e)
+        console.log(e)
       })
   }
 
     create(...labels : readonly string[]){
     this.tds.create(...labels)
-    this.liste.push(...labels)
     console.log(...labels)
+    this.liste.push(...labels)
     console.log(this.newTask)
     console.log(this.liste)
     localStorage.setItem('todo', JSON.stringify(this.liste));
@@ -50,10 +56,17 @@ export class TodoListComponent implements OnInit {
     localStorage.setItem("todo", JSON.stringify(this.liste));
   }
 
+    tous() : number{
+      return this.tds.subj.value.items.length;
+    }
 
+    actifs(): number{
+      const L = this.tds.subj.value.items.filter(item => !item.isDone)
+      return L.length
+    }
 
- 
-
-
-
+    done(item: TodoItem){
+      this.delete(item)
+      this.tds.createDone(item.label)
+    }
 }

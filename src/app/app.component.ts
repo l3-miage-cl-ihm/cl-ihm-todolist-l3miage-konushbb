@@ -20,8 +20,8 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(): void {
-      var temp:string[] = JSON.parse(localStorage.getItem('todo') || '[]');
-      temp.forEach( e =>
+      this.liste = JSON.parse(localStorage.getItem('todo') || '[]');
+      this.liste.forEach( e =>
         {
           this.create(e)
         })
@@ -57,6 +57,19 @@ export class AppComponent implements OnInit{
   }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // TODO stockage de la liste a faire avec toutes le données : is done etc 
