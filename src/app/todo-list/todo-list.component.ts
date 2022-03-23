@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FilterList, TodoItem, TodoList, TodolistService } from './todolist.service';
-import { Observable, BehaviorSubject } from 'RxJs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { ThisReceiver } from '@angular/compiler';
 
 @Component({
@@ -13,32 +13,38 @@ export class TodoListComponent implements OnInit {
 
   liste: string[] = []
   newTask = ""
+  l:string[] = []
 
   readonly todoListObs : Observable<TodoList>;
-  
-  activeList : Observable<FilterList>;
 
   constructor(public tds : TodolistService){
     this.todoListObs = tds.observable;
-    this.activeList = tds.aObservable
   }
 
   ngOnInit(): void {
-
-    var t:string[] = JSON.parse(localStorage.getItem('todo') || '[]');
-    t.forEach( e =>
-      {
-        this.create(e)
-        console.log(e)
-      })
+     this.l = JSON.parse(localStorage.getItem('todo') || '[]');
+      this.l.forEach( e =>
+        {
+          this.createItem(e)
+        })
   }
 
-    create(...labels : readonly string[]){
-    this.tds.create(...labels)
-    console.log(...labels)
-    this.liste.push(...labels)
-    console.log(this.newTask)
-    console.log(this.liste)
+  // create(...labels : readonly string[]){
+  //     this.tds.create(...labels)
+  //     console.log(this.liste + "    la 1er fois")
+
+  //     console.log(this.liste + "   la 2eme fois ")
+  //     console.log(this.liste)
+  //     console.log(...labels)
+  //     localStorage.setItem('todo', JSON.stringify(this.liste));
+  // }
+
+  createItem(label:string){
+    console.log(this.liste + "    la 1er fois")
+    this.tds.createItem(label)
+    console.log(this.liste + "   la 2eme fois ")
+    this.liste.push(label)
+    console.log(this.liste + "   la 3eme fois ")
     localStorage.setItem('todo', JSON.stringify(this.liste));
   }
   
@@ -53,8 +59,18 @@ export class TodoListComponent implements OnInit {
       });
     })
     this.liste = L;
+    console.log(this.liste);
     localStorage.setItem("todo", JSON.stringify(this.liste));
   }
+
+    update(item :TodoItem){
+      if(!item.isDone){
+        this.tds.delete(item);
+        this.tds.createDone(item.label);
+      }else{
+        item.isDone = false;
+      }
+    }
 
     tous() : number{
       return this.tds.subj.value.items.length;
@@ -65,8 +81,12 @@ export class TodoListComponent implements OnInit {
       return L.length
     }
 
-    done(item: TodoItem){
-      this.delete(item)
-      this.tds.createDone(item.label)
+    completes(): number{
+      return this.tds.subj.value.items.filter(item => item.isDone).length;
+    }
+
+    supprimeCoches(){
+      const L = this.tds.subj.value.items.filter(item => item.isDone)
+      this.delete(...L);
     }
 }

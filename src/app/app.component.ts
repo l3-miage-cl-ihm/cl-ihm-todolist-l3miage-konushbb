@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Observable } from 'RxJs';
+import { Observable } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { History, HistoryService } from './history.service';
 
@@ -20,41 +20,41 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(): void {
-      this.liste = JSON.parse(localStorage.getItem('todo') || '[]');
-      this.liste.forEach( e =>
-        {
-          this.create(e)
-        })
+      // this.liste = JSON.parse(localStorage.getItem('todo') || '[]');
+      // this.liste.forEach( e =>
+      //   {
+      //     this.create(e)
+      //   })
   }
   
 
-  create(...labels : readonly string[]){
-    this.h.create(...labels)
-    this.liste.push(...labels)
-    console.log(this.liste)
-    console.log(...labels)
-    localStorage.setItem('todo', JSON.stringify(this.liste));
-  }
+  // create(...labels : readonly string[]){
+  //   this.h.create(...labels)
+  //   this.liste.push(...labels)
+  //   console.log(this.liste)
+  //   console.log(...labels)
+  //   localStorage.setItem('todo', JSON.stringify(this.liste));
+  // }
 
 
-  delete(item : string){
-    this.h.delete(item);
-    for( var i = 0; i < this.liste.length; i++){ 
+  // delete(item : string){
+  //   this.h.delete(item);
+  //   for( var i = 0; i < this.liste.length; i++){ 
     
-      if (this.liste[i] === item) { 
+  //     if (this.liste[i] === item) { 
   
-          this.liste.splice(i, 1); 
-      }
+  //         this.liste.splice(i, 1); 
+  //     }
   
-  }
-    localStorage.setItem('todo', JSON.stringify(this.liste));
-  }
+  // }
+  //   localStorage.setItem('todo', JSON.stringify(this.liste));
+  // }
 
-  done(item: string){
-    this.delete(item);
-    this.h.createDone(item);
+  // done(item: string){
+  //   this.delete(item);
+  //   this.h.createDone(item);
 
-  }
+  // }
 
 }
 

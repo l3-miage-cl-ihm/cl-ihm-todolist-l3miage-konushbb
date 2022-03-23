@@ -10,7 +10,7 @@ export class TodoItemComponent implements OnInit {
 
 @Input () data!: TodoItem;
 @Output () remove = new EventEmitter<TodoItem>();
-@Output () update = new EventEmitter<Partial<TodoItem>>();
+@Output () update = new EventEmitter<TodoItem>();
 
 @ViewChild("newTextInput")newTextInput!:ElementRef<HTMLInputElement>;
 
@@ -35,9 +35,9 @@ constructor(public tds : TodolistService){}
     this.remove.emit(item)
   }
 
-  // updateItem(ite){
-
-  // }
+  updateItem(item: TodoItem){
+    this.update.emit(item)
+  }
 
 
   check(item : TodoItem){

@@ -23,15 +23,10 @@ let idItem = 0;
 export class TodolistService {
   public subj = new BehaviorSubject<TodoList>({label: 'To Do List', items: [], done: []});
   readonly observable = this.subj.asObservable();
-
-  a: TodoItem[] = this.subj.value.items.filter(item => !item.isDone)
-  aSubj = new BehaviorSubject<FilterList>({items : this.a})
-  aObservable = this.aSubj.asObservable()
-
   constructor() {
   }
 
-  create(...labels: readonly string[]): string | undefined {
+  create(...labels: readonly string[]): this {
     const L: TodoList = this.subj.value;
     this.subj.next( {
       ...L,
@@ -43,8 +38,20 @@ export class TodolistService {
       ]
     } );
     var e = this.subj.value.items.concat()
-    const essai = e.pop()
-    return essai?.label;
+    return this;
+  }
+
+  createItem(label:string): this {
+    const L: TodoList = this.subj.value;
+    this.subj.next( {
+      ...L,
+      items: [
+        ...L.items,
+        {label, isDone: false, id: idItem++}
+      ]
+    } );
+    var e = this.subj.value.items.concat()
+    return this;
   }
 
   createDone(...labels: readonly string[]): this {

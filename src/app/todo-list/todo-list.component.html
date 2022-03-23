@@ -1,7 +1,7 @@
 <section class="todoapp">
     <header class="header">
       <h1></h1>
-      <form (submit)= "create(newTask); newTask=''">
+      <form (submit)= "createItem(newTask); newTask=''">
         <input  
                 name        = "newTodoInput"
                 class       = "new-todo"
@@ -17,28 +17,28 @@
               />
       <label for="toggleAll">Mark all as complete</label>
       <ul class="todo-list">
-        <li *ngFor="let item of tdl.items; index as i">
+        <li *ngFor="let item of tdl.items; index as i" [class.completed]="item.isDone" >
           <app-todo-item [data] = "item"
                         (remove) = "delete(item)"
-                        (check)="done(item)"
+                        (update)="update(item)"
                          ></app-todo-item>
         </li>
       </ul>
     </section>
     <footer class="footer">
-      <span class="todo-count"><strong></strong> restantes</span>
+      <span class="todo-count"><strong></strong>{{actifs()}} restantes</span>
       <ul class="filters">
         <li>
           <a class="filterAll"> Tous {{ tous() }}</a>
         </li>
         <li>
-          <a class="filterActives">Actifs {{ activeList }}</a>
+          <a class="filterActives">Actifs {{ actifs() }}</a>
         </li>
         <li>
-          <a class="filterCompleted">Complétés</a>
+          <a class="filterCompleted">Complétés {{ completes() }} </a>
         </li>
       </ul>
-      <button class="clear-completed">Supprimer cochées</button>
+      <button class="clear-completed" (click) = "supprimeCoches()">Supprimer cochées</button>
     </footer>
   </section>
   
