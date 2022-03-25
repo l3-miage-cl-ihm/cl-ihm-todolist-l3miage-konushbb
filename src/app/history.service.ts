@@ -24,47 +24,17 @@ export class HistoryService<T> {
 
   constructor() { }
 
-  create(...labels : readonly string[] ) : this {
-    const L: string[] = this.subj.value.history
-    this.subj.value.canUndo = false
-    this.subj.value.canRedo = false
-    this.subj.value.history = 
-      [...L,
-      ...labels.filter( l => l !== '').map(
-          label => (label)
-        )]
-    return this;
-  }
-
-  createDone(...labels : readonly string[] ) : this {
-    const L: string[] = this.subj.value.history
-    this.subj.value.canUndo = true
-    this.subj.value.canRedo = true
-    this.subj.value.history = 
-      [...L,
-      ...labels.filter( l => l !== '').map(
-          label => (label)
-        )]
-    return this;
-  }
-
-  delete(item : string): this{
-    this.subj.value.history.forEach((element,index)=>{
-      if(element==item) this.subj.value.history.splice(index,1);
-   });
-    return this;
-  }
 
   getHistory(): string[]{
     return this.subj.value.history;
   }
 
-  setHistory(items: string[]): void{
-    items.forEach( e => {
-      this.create(e)
+  // setHistory(items: string[]): void{
+  //   items.forEach( e => {
+  //     this.create(e)
       
-    })
-  }
+  //   })
+  // }
 
 
 }

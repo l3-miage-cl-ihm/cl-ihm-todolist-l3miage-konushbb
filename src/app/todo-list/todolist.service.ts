@@ -41,7 +41,7 @@ export class TodolistService {
     return this;
   }
 
-  createItem(label:string): this {
+  createItem(label:string): any {
     const L: TodoList = this.subj.value;
     this.subj.next( {
       ...L,
@@ -51,7 +51,10 @@ export class TodolistService {
       ]
     } );
     var e = this.subj.value.items.concat()
-    return this;
+    const record = {"label" : label,
+                    "isDone": false,
+                    "id" : idItem++}
+    return record;
   }
 
   createDone(...labels: readonly string[]): this {

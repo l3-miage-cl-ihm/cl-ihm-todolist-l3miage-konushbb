@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FilterList, TodoItem, TodoList, TodolistService } from './todolist.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { ThisReceiver } from '@angular/compiler';
+import { AngularFirestore } from '@angular/fire/compat/firestore'
 
 @Component({
   selector: 'app-todo-list',
@@ -17,7 +18,7 @@ export class TodoListComponent implements OnInit {
 
   readonly todoListObs : Observable<TodoList>;
 
-  constructor(public tds : TodolistService){
+  constructor(public tds : TodolistService, public firestoreService: AngularFirestore){
     this.todoListObs = tds.observable;
   }
 
@@ -40,12 +41,12 @@ export class TodoListComponent implements OnInit {
   // }
 
   createItem(label:string){
-    console.log(this.liste + "    la 1er fois")
-    this.tds.createItem(label)
-    console.log(this.liste + "   la 2eme fois ")
+    //ajouter : si input vide 
+    const record = this.tds.createItem(label)
     this.liste.push(label)
-    console.log(this.liste + "   la 3eme fois ")
     localStorage.setItem('todo', JSON.stringify(this.liste));
+    this.firestoreService.collection('TodoList').add(record)
+
   }
   
     delete(...items : readonly TodoItem[]){
