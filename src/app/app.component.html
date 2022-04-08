@@ -1,60 +1,14 @@
-<!-- <div class="module">
-    <div class="title">
-      <h1>ToDo List</h1>
-    </div>
-  
-  <div class="container">
-    <div *ngIf="todoListObs | async as td">
-          <input type= "text" [(ngModel)] = "newTask" placeholder="Add new task.." (keyup.enter)= "create(newTask)"/>
-  </div>
-  </div>
-  
-  <hr class="separator">
-  
-  <section *ngIf="todoListObs | async as tdl">
-    <h1 class="title">{{tdl.label}} :</h1>
-    <ul class="taskList">
-      <li *ngFor="let item of tdl.items; index as i">
-        {{ item.label }}
-        <button (click) = "done(item)"> Fait </button>
-        <div *ngIf="item.isDone"> Done</div>
-        <button (click) = "delete(item)"> Remove task </button>
-      </li>
-    </ul>
-  </section>
-  </div> -->
+
 
   <div class="module">
-    <div class="title">
-      <h1>ToDo List</h1>
-    </div>
-    <div *ngIf="auth.user | async as user; else showLogin">
+    <!-- <div *ngIf="auth.user | async as user; else showLogin">
       <h1>Hello {{ user.displayName }}!</h1> 
       <img [src] = "user.photoURL"/>
       <button (click)="logout()">Logout</button>
     </div>
     <ng-template #showLogin>
-      <p>Please login.</p>
+      <p>Please login</p>
       <button (click)="login()">Login with Google</button>
-    </ng-template>
+    </ng-template> -->
 
     <app-todo-list></app-todo-list>
-  <!-- <div class="container">
-    <div *ngIf="todoList| async as td">
-          <input type= "text" [(ngModel)] = "newTask" placeholder="Add new task.." (keyup.enter)= "create(newTask)"/>
-  </div>
-  </div>
-  
-  <hr class="separator">
-  
-  <section *ngIf="todoList | async as tdl">
-    <h1 class="title"> Titre :</h1>
-    <ul class="taskList">
-      <li *ngFor="let item of tdl.history; index as i">
-        {{ item }}
-        <button (click) = "delete(item)"> Remove task </button>
-      </li>
-    </ul>
-  </section>
-  </div> -->
-

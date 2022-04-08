@@ -1,8 +1,19 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FilterList, TodoItem, TodoList, TodolistService } from './todolist.service';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { ThisReceiver } from '@angular/compiler';
-import { AngularFirestore } from '@angular/fire/compat/firestore'
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore'
+import firebase from 'firebase/compat/app';
+import { map } from 'rxjs/operators'
+
+
+type FctFilter = (item: TodoItem) => boolean
+
+interface TodoListPlus extends TodoList{
+  remaining: number;
+  filter: FctFilter
+  displayedItems: readonly TodoItem[]
+  allIsDone: boolean
+}
 
 @Component({
   selector: 'app-todo-list',
@@ -12,64 +23,120 @@ import { AngularFirestore } from '@angular/fire/compat/firestore'
 
 export class TodoListComponent implements OnInit {
 
+  readonly fAll: FctFilter = () => true;
+  readonly fCompleted : FctFilter = (item) => item.isDone;
+  readonly fActive : FctFilter = (item) => !item.isDone;
+  private fCurrent = new BehaviorSubject<FctFilter>(this.fAll)
+
   liste: string[] = []
   newTask = ""
   l:string[] = []
+  listeDone: string[] = []
+  d:string[] =[]
 
-  readonly todoListObs : Observable<TodoList>;
 
-  constructor(public tds : TodolistService, public firestoreService: AngularFirestore){
-    this.todoListObs = tds.observable;
+  readonly todoListObs : Observable<TodoListPlus>;
+  
+
+  constructor(public tds : TodolistService){
+    this.todoListObs = combineLatest([this.tds.observable, this.fCurrent]).pipe(
+      map(([L, f]) => ({
+        ...L,
+        remaining : L.done.reduce((nb, item) =>item.isDone ? nb : nb++, 0),
+        filter: f,
+        displayedItems : L.items.filter(f),
+        allIsDone : !L.items.find(it => it.isDone)
+      }))
+    )
+    
+
   }
 
   ngOnInit(): void {
+
      this.l = JSON.parse(localStorage.getItem('todo') || '[]');
       this.l.forEach( e =>
         {
           this.createItem(e)
         })
+     this.d = JSON.parse(localStorage.getItem('done') || '[]');
+     this.d.forEach(e =>{
+       this.createItemDone(e)
+     })
   }
 
-  // create(...labels : readonly string[]){
-  //     this.tds.create(...labels)
-  //     console.log(this.liste + "    la 1er fois")
 
-  //     console.log(this.liste + "   la 2eme fois ")
-  //     console.log(this.liste)
-  //     console.log(...labels)
-  //     localStorage.setItem('todo', JSON.stringify(this.liste));
-  // }
+
+
 
   createItem(label:string){
-    //ajouter : si input vide 
-    const record = this.tds.createItem(label)
-    this.liste.push(label)
-    localStorage.setItem('todo', JSON.stringify(this.liste));
-    this.firestoreService.collection('TodoList').add(record)
+    if(label != ""){
+      this.tds.createItem(label)
+      this.addTodo(label)
+
+    }
 
   }
-  
-    delete(...items : readonly TodoItem[]){
-    this.tds.delete(...items);
-    let L: string[] = [];
-    let i = 0;
-    this.tds.subj.forEach(e => {
-      e.items.forEach(element => {
-        L[i] = element.label;
-        i ++;
-      });
-    })
-    this.liste = L;
-    console.log(this.liste);
-    localStorage.setItem("todo", JSON.stringify(this.liste));
+
+  createItemDone(label:string){
+    if(label !=""){
+      this.tds.createDone(label)
+      this.listeDone.push(label)
+      localStorage.setItem('done', JSON.stringify(this.listeDone) );
+    }
   }
+  
+    delete(...items : TodoItem[]){
+       this.tds.delete(...items);
+       items.forEach( item => {
+        if(!item.isDone){
+          this.deleteFromTodo(item)
+          localStorage.setItem('todo', JSON.stringify(this.liste))
+          console.log("deleted from todo")
+       }
+       else{
+         this.deleteFromDone(item)
+         localStorage.setItem('done', JSON.stringify(this.listeDone))
+       }
+       })
+  }
+
+    addTodo(label:string){
+      this.liste.push(label)
+      localStorage.setItem("todo", JSON.stringify(this.liste));
+    }
+
+    deleteFromTodo(item : TodoItem){
+      this.liste.forEach( (e,i) =>{
+    
+        if ( e == item.label) { 
+    
+            this.liste.splice(i, 1); 
+        }
+    
+    })
+    }
+
+    deleteFromDone(item : TodoItem){
+      this.listeDone.forEach( (e,i) =>{
+    
+        if ( e == item.label) { 
+    
+            this.listeDone.splice(i, 1); 
+        }
+    
+    })
+    }
 
     update(item :TodoItem){
       if(!item.isDone){
-        this.tds.delete(item);
-        this.tds.createDone(item.label);
+        this.delete(item);
+        this.deleteFromTodo(item)
+        this.createItemDone(item.label);
       }else{
-        item.isDone = false;
+        this.delete(item);
+        this.deleteFromDone(item)
+        this.createItem(item.label)
       }
     }
 
@@ -89,5 +156,9 @@ export class TodoListComponent implements OnInit {
     supprimeCoches(){
       const L = this.tds.subj.value.items.filter(item => item.isDone)
       this.delete(...L);
+    }
+
+    setFilter(f: FctFilter){
+      this.fCurrent.next(f)
     }
 }

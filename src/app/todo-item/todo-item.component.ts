@@ -25,11 +25,16 @@ private _editing: boolean = false;
 //   }
 // }
 
+ 
 
-constructor(public tds : TodolistService){}
+constructor(public tds : TodolistService){
+
+}
 
   ngOnInit(): void {
   }
+
+
 
   destroy(item: TodoItem){
     this.remove.emit(item)

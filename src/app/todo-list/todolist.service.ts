@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, switchMap } from 'rxjs';
+import firebase from 'firebase/compat/app';
+import { AngularFirestore } from '@angular/fire/compat/firestore';
+import { AngularFireAuth } from '@angular/fire/compat/auth'
+
+import { combineLatestInit } from 'rxjs/internal/observable/combineLatest';
+import { map, combineLatestWith } from 'rxjs/operators';
 
 export interface TodoItem {
   readonly label: string;
@@ -9,7 +15,7 @@ export interface TodoItem {
 
 export interface TodoList {
   readonly label: string;
-  readonly items: readonly TodoItem[];
+  items: readonly TodoItem[];
   done : TodoItem[]
 }
 export interface FilterList{
@@ -17,29 +23,22 @@ export interface FilterList{
 }
 let idItem = 0;
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class TodolistService {
+
+
   public subj = new BehaviorSubject<TodoList>({label: 'To Do List', items: [], done: []});
   readonly observable = this.subj.asObservable();
-  constructor() {
+
+  constructor(public fs: AngularFirestore, private afa: AngularFireAuth) {
+
+    
   }
 
-  create(...labels: readonly string[]): this {
-    const L: TodoList = this.subj.value;
-    this.subj.next( {
-      ...L,
-      items: [
-        ...L.items,
-        ...labels.filter( l => l !== '').map(
-            label => ({label, isDone: false, id: idItem++})
-          )
-      ]
-    } );
-    var e = this.subj.value.items.concat()
-    return this;
-  }
+
 
   createItem(label:string): any {
     const L: TodoList = this.subj.value;
@@ -57,15 +56,13 @@ export class TodolistService {
     return record;
   }
 
-  createDone(...labels: readonly string[]): this {
+  createDone(label: string): this {
     const L: TodoList = this.subj.value;
     this.subj.next( {
       ...L,
       items: [
         ...L.items,
-        ...labels.filter( l => l !== '').map(
-            label => ({label, isDone: true, id: idItem++})
-          )
+        {label, isDone: true, id: idItem++}
       ]
     } );
     return this;

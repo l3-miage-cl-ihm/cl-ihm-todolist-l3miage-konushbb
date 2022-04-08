@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AngularFireAuth } from '@angular/fire/compat/auth'
 import firebase from 'firebase/compat/app'
-import { AngularFirestore } from '@angular/fire/compat/firestore'
+
 
 @Component({
   selector: 'app-root',
@@ -15,7 +15,7 @@ export class AppComponent implements OnInit{
   newTask = '';
   liste: string[] = [];
   title = 'l3m-tpX-todolist-angular-y2022';
-  constructor( public auth: AngularFireAuth, firestoreService: AngularFirestore){
+  constructor( public auth: AngularFireAuth){
 
   }
 

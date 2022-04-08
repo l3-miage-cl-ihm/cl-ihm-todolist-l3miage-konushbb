@@ -1,11 +1,11 @@
 <section class="todoapp">
     <header class="header">
-      <h1></h1>
+      <h1>TO DO LIST</h1>
       <form (submit)= "createItem(newTask); newTask=''">
         <input  
                 name        = "newTodoInput"
                 class       = "new-todo"
-                placeholder = "Que faire?"
+                placeholder = "Enter a new task..."
                 autofocus #lab
                 [(ngModel)] = "newTask"/>
       </form>
@@ -17,7 +17,7 @@
               />
       <label for="toggleAll">Mark all as complete</label>
       <ul class="todo-list">
-        <li *ngFor="let item of tdl.items; index as i" [class.completed]="item.isDone" >
+        <li *ngFor="let item of tdl.displayedItems; index as i" [class.completed]="item.isDone" >
           <app-todo-item [data] = "item"
                         (remove) = "delete(item)"
                         (update)="update(item)"
@@ -26,19 +26,19 @@
       </ul>
     </section>
     <footer class="footer">
-      <span class="todo-count"><strong></strong>{{actifs()}} restantes</span>
+      <span class="todo-count"><strong></strong>{{actifs()}} Left</span>
       <ul class="filters">
         <li>
-          <a class="filterAll"> Tous {{ tous() }}</a>
+          <a class="filterAll" (click)="setFilter(fAll)"> All {{ tous() }}</a>
         </li>
         <li>
-          <a class="filterActives">Actifs {{ actifs() }}</a>
+          <a class="filterActives" (click)="setFilter(fActive)">Actifs {{ actifs() }}</a>
         </li>
         <li>
-          <a class="filterCompleted">Complétés {{ completes() }} </a>
+          <a class="filterCompleted" (click)="setFilter(fCompleted) ">Completed {{ completes() }} </a>
         </li>
       </ul>
-      <button class="clear-completed" (click) = "supprimeCoches()">Supprimer cochées</button>
+      <button class="clear-completed" (click) = "supprimeCoches()">Clear completed</button>
     </footer>
   </section>
   
