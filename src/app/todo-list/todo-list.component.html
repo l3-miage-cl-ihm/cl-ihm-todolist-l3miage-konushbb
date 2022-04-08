@@ -17,10 +17,11 @@
               />
       <label for="toggleAll">Mark all as complete</label>
       <ul class="todo-list">
-        <li *ngFor="let item of tdl.displayedItems; index as i" [class.completed]="item.isDone" >
+        <li *ngFor="let item of tdl.displayedItems; index as i" [class.completed]="item.isDone" [class.editing]="TodoItem.editing" >
           <app-todo-item [data] = "item"
                         (remove) = "delete(item)"
                         (update)="update(item)"
+                        (_editing)="tds.update($event, item)" #TodoItem
                          ></app-todo-item>
         </li>
       </ul>

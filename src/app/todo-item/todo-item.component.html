@@ -7,15 +7,18 @@
             (change) = "updateItem(data)"
             [checked]="data.isDone"
     />
-    <label  class="texte">
+    <label  class="texte" (dblclick)="isEditing()">
             {{ data.label }}
     </label>
     <button class="destroy" (click) = "destroy(data)"></button>
   </div>
-  <form>
+  <form (ngSubmit)="updateLabel(newTextInput.value)"
+        (focusout)="updateLabel(data.label)">
     <input  #newTextInput
             name      = "newTextInput"
             class     = "edit"
-    />
+            [value]="this.data.label"
+
+    />{{ newTextInput.focus() }}
   </form>
   

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, ViewChild, EventEmitter, ElementRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, ViewChild, EventEmitter, ElementRef, IterableDiffers } from '@angular/core';
 import { TodoItem, TodolistService } from '../todo-list/todolist.service';
 
 @Component({
@@ -12,9 +12,12 @@ export class TodoItemComponent implements OnInit {
 @Output () remove = new EventEmitter<TodoItem>();
 @Output () update = new EventEmitter<TodoItem>();
 
+
 @ViewChild("newTextInput")newTextInput!:ElementRef<HTMLInputElement>;
 
-private _editing: boolean = false;
+@Output() _editing = new EventEmitter<Partial<TodoItem>>();
+
+ public editing =  false
 // get editing (): boolean {return this.editing}
 // set editing(e: boolean) {
 //   this._editing = e;
@@ -45,12 +48,14 @@ constructor(public tds : TodolistService){
   }
 
 
-  check(item : TodoItem){
-    if(!item.isDone){
-      item.isDone = true
-    }else{
-      item.isDone = false
-    }
+  updateLabel(label:string){
+    this._editing.emit({label})
   }
+
+  isEditing(): void{
+    this.editing = !this.editing
+
+  }
+
 
 }

@@ -1,15 +1,10 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, switchMap } from 'rxjs';
-import firebase from 'firebase/compat/app';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireAuth } from '@angular/fire/compat/auth'
 
-import { combineLatestInit } from 'rxjs/internal/observable/combineLatest';
-import { map, combineLatestWith } from 'rxjs/operators';
 
 export interface TodoItem {
   readonly label: string;
-  isDone: boolean;
+  readonly isDone: boolean;
   readonly id: number;
 }
 
@@ -33,7 +28,7 @@ export class TodolistService {
   public subj = new BehaviorSubject<TodoList>({label: 'To Do List', items: [], done: []});
   readonly observable = this.subj.asObservable();
 
-  constructor(public fs: AngularFirestore, private afa: AngularFireAuth) {
+  constructor() {
 
     
   }

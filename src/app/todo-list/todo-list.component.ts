@@ -106,6 +106,11 @@ export class TodoListComponent implements OnInit {
       localStorage.setItem("todo", JSON.stringify(this.liste));
     }
 
+    addDone(label:string){
+      this.listeDone.push(label)
+      localStorage.setItem("done", JSON.stringify(this.listeDone));
+    }
+
     deleteFromTodo(item : TodoItem){
       this.liste.forEach( (e,i) =>{
     
@@ -115,6 +120,7 @@ export class TodoListComponent implements OnInit {
         }
     
     })
+    localStorage.setItem("todo", JSON.stringify(this.liste));
     }
 
     deleteFromDone(item : TodoItem){
@@ -126,19 +132,21 @@ export class TodoListComponent implements OnInit {
         }
     
     })
+    localStorage.setItem("done", JSON.stringify(this.listeDone));
     }
 
     update(item :TodoItem){
       if(!item.isDone){
-        this.delete(item);
+        this.tds.update({isDone:true}, item)
         this.deleteFromTodo(item)
-        this.createItemDone(item.label);
+        this.addDone(item.label);
       }else{
-        this.delete(item);
+        this.tds.update({isDone:false}, item)
         this.deleteFromDone(item)
-        this.createItem(item.label)
+        this.addTodo(item.label)
       }
     }
+
 
     tous() : number{
       return this.tds.subj.value.items.length;
@@ -161,4 +169,6 @@ export class TodoListComponent implements OnInit {
     setFilter(f: FctFilter){
       this.fCurrent.next(f)
     }
+
+
 }
