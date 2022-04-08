@@ -1,6 +1,6 @@
-#Projet Todo List
+Projet Todo List
 
-#Fonctionalité implementées :
+Fonctionalité implementées :
 -ajout d'une tache dans la liste
 -coché les cases et changer l'etat d'une tache : fait ou non
 -affichage des taches actives 
@@ -8,5 +8,5 @@
 -affichage de toutes les taches
 
 
-#Fonctionalitées manquant :
+Fonctionalitées manquant :
 -synchronisation avec firebase
